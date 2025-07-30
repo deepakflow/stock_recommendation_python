@@ -94,7 +94,7 @@ app.add_exception_handler(RateLimitExceeded, _rate_limit_exceeded_handler)
 # Add CORS middleware
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["http://localhost:3000", "https://yourdomain.com"],  # Configure for your frontend
+    allow_origins=["https://prompt9.pro", "https://api.prompt9.pro", "http://localhost:3000"],  # Updated domains
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],

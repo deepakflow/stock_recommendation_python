@@ -10,6 +10,7 @@ APP_NAME="stock-recommendation-agent"
 APP_DIR="/var/www/$APP_NAME"
 SERVICE_NAME="stock-recommendation"
 NGINX_SITE="stock-api"
+DOMAIN="prompt9.pro"
 
 # Colors for output
 RED='\033[0;31m'
@@ -114,8 +115,8 @@ sleep 10
 if curl -f http://localhost:8000/health > /dev/null 2>&1; then
     print_status "✅ Application is running successfully!"
     print_status "🌐 API is available at: http://localhost:8000"
-    print_status "�� Health check: http://localhost:8000/health"
-    print_status "�� API documentation: http://localhost:8000/docs"
+    print_status " Health check: http://localhost:8000/health"
+    print_status " API documentation: http://localhost:8000/docs"
 else
     print_error "❌ Application failed to start"
     print_status "Checking logs..."
@@ -126,14 +127,13 @@ fi
 # Setup SSL certificate (optional)
 read -p "Do you want to setup SSL certificate with Let's Encrypt? (y/n): " setup_ssl
 if [ "$setup_ssl" = "y" ]; then
-    read -p "Enter your domain name: " domain_name
-    print_status "Setting up SSL certificate for $domain_name..."
-    certbot --nginx -d $domain_name --non-interactive --agree-tos --email admin@$domain_name
+    print_status "Setting up SSL certificate for $DOMAIN..."
+    certbot --nginx -d $DOMAIN -d api.$DOMAIN --non-interactive --agree-tos --email admin@$DOMAIN
 fi
 
 print_status "🎉 Deployment completed!"
 print_status ""
-print_status "�� Useful commands:"
+print_status " Useful commands:"
 print_status "   - View logs: journalctl -u $SERVICE_NAME -f"
 print_status "   - Restart service: systemctl restart $SERVICE_NAME"
 print_status "   - Check status: systemctl status $SERVICE_NAME"
@@ -148,3 +148,7 @@ print_status "📊 Monitor memory usage:"
 print_status "   - htop"
 print_status "   - free -h"
 print_status "   - journalctl -u $SERVICE_NAME | grep 'Memory usage'"
+print_status ""
+print_status "🌐 Your API will be available at:"
+print_status "   - https://$DOMAIN"
+print_status "   - https://api.$DOMAIN"
