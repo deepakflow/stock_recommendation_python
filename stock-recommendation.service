@@ -1,0 +1,24 @@
+[Unit]
+Description=Stock Recommendation Agent API
+After=network.target
+
+[Service]
+Type=exec
+User=www-data
+Group=www-data
+WorkingDirectory=/var/www/stock-recommendation-agent
+Environment=PATH=/var/www/stock-recommendation-agent/venv/bin
+ExecStart=/var/www/stock-recommendation-agent/venv/bin/uvicorn app:app --host 0.0.0.0 --port 8000 --workers 1
+ExecReload=/bin/kill -HUP $MAINPID
+Restart=always
+RestartSec=5
+StandardOutput=journal
+StandardError=journal
+SyslogIdentifier=stock-recommendation-api
+
+# Memory limits for 2GB server
+MemoryMax=1G
+MemoryHigh=800M
+
+[Install]
+WantedBy=multi-user.target

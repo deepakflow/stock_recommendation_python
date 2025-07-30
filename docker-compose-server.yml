@@ -1,0 +1,32 @@
+version: '3.8'
+
+services:
+  stock-recommendation-api:
+    build: .
+    ports:
+      - "8000:8000"
+    environment:
+      - GOOGLE_CLIENT_ID=${GOOGLE_CLIENT_ID}
+      - SUPABASE_URL=${SUPABASE_URL}
+      - SUPABASE_SERVICE_ROLE_KEY=${SUPABASE_SERVICE_ROLE_KEY}
+      - JWT_SECRET=${JWT_SECRET}
+      - OPENAI_API_KEY=${OPENAI_API_KEY}
+      - BRIGHT_DATA_API_TOKEN=${BRIGHT_DATA_API_TOKEN}
+      - WEB_UNLOCKER_ZONE=${WEB_UNLOCKER_ZONE}
+      - BROWSER_ZONE=${BROWSER_ZONE}
+    volumes:
+      - ./logs:/app/logs
+    restart: unless-stopped
+    # Memory limits for 2GB server
+    deploy:
+      resources:
+        limits:
+          memory: 1G
+        reservations:
+          memory: 512M
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8000/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 40s
